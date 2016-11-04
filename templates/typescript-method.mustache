@@ -57,7 +57,7 @@ $queryParameters?: any
 {{/isSingleton}}{{/parameters}}
     $queryParameters?: any,
     $domain?: string
-}): Promise<request.Response> {
+}): Promise<{{#tsReturnType}}{{>type}}{{/tsReturnType}}{{^tsReturnType}}any{{/tsReturnType}}> {
     const domain = parameters.$domain ? parameters.$domain : this.domain;
     const errorHandlers = this.errorHandlers;
     const request = this.request;
@@ -143,5 +143,5 @@ if(parameters.$queryParameters) {
 
     request('{{method}}', domain + path, body, headers, queryParameters, form, reject, resolve, errorHandlers);
 
-    });
+    }).then(function(response: request.Response) { return response.body; });
 };
