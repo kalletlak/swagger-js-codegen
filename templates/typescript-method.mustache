@@ -101,11 +101,7 @@ $domain?: string
     {{/isQueryParameter}}
 
     {{#isPathParameter}}
-<<<<<<< c7a647fd0f31e56be5752f744d95cfbfb0f2614f
-        path = path.replace('{{=<% %>=}}{<%&name%>}<%={{ }}=%>', `${parameters['{{&camelCaseName}}']}`);
-=======
         path = path.replace('{{=<% %>=}}{<%&name%>}<%={{ }}=%>', parameters['{{&camelCaseName}}'] + '');
->>>>>>> Fix TS error for non-string path parameters by converting param to string
     {{/isPathParameter}}
 
     {{#isHeaderParameter}}
