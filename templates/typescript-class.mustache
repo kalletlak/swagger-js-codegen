@@ -7,7 +7,7 @@ import {SuperAgentStatic} from "superagent";
 
 type CallbackHandler = (err: any, res?: request.Response) => void;
 {{#definitions}}
-type {{&name}} = {{#tsType}}{{> type}}{{/tsType}};
+export type {{&name}} = {{#tsType}}{{> type}}{{/tsType}};
 {{/definitions}}
 
 type Logger = { log: (line: string) => any };
@@ -35,14 +35,9 @@ export default class {{&className}} {
     addErrorHandler(handler: CallbackHandler) {
         this.errorHandlers.push(handler);
     }
-
-    private request(method: string, url: string, body: any, headers: any, queryParameters: any, form: any, reject: CallbackHandler, resolve: CallbackHandler) {
-        if(this.logger) {
-          this.logger.log(`Call ${method} ${url}`);
-        }
-
-        let req = (request as SuperAgentStatic)(method, url).query(queryParameters);
-
+    private request(method: string, url: string, body: any, headers: any, queryParameters: any, form: any, reject: CallbackHandler, resolve: CallbackHandler, errorHandlers: CallbackHandler[]) {
+        let req = (new (request as any).Request(method, url) as request.Request)
+            .query(queryParameters);
         Object.keys(headers).forEach(key => {
             req.set(key, headers[key]);
         });
