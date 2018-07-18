@@ -52,12 +52,12 @@ $queryParameters?: any
     {{^isSingleton}} * @param {{=<% %>=}}{<%&type%>}<%={{ }}=%> {{&camelCaseName}} - {{&description}}{{/isSingleton}}
 {{/parameters}}
 */
-{{&methodName}}(parameters: {
+{{&methodName}}WithHttpInfo(parameters: {
 {{#parameters}}{{^isSingleton}}'{{&camelCaseName}}'{{&cardinality}}: {{> type}},
 {{/isSingleton}}{{/parameters}}
     $queryParameters?: any,
     $domain?: string
-}): Promise<{{#tsReturnType}}{{>type}}{{/tsReturnType}}{{^tsReturnType}}any{{/tsReturnType}}> {
+}): Promise<request.Response> {
     const domain = parameters.$domain ? parameters.$domain : this.domain;
     const errorHandlers = this.errorHandlers;
     const request = this.request;
@@ -143,5 +143,26 @@ if(parameters.$queryParameters) {
 
     request('{{method}}', domain + path, body, headers, queryParameters, form, reject, resolve, errorHandlers);
 
-    }).then(function(response: request.Response) { return response.body; });
+    });
+};
+
+
+/**
+* {{&summary}}
+* @method
+{{#externalDocs}}
+    * @see {@link {{&url}}|{{#description}}{{&description}}{{/description}}{{^description}}External docs{{/description}}}
+{{/externalDocs}}
+* @name {{&className}}#{{&methodName}}
+{{#parameters}}
+    {{^isSingleton}} * @param {{=<% %>=}}{<%&type%>}<%={{ }}=%> {{&camelCaseName}} - {{&description}}{{/isSingleton}}
+{{/parameters}}
+*/
+{{&methodName}}(parameters: {
+{{#parameters}}{{^isSingleton}}'{{&camelCaseName}}'{{&cardinality}}: {{> type}},
+{{/isSingleton}}{{/parameters}}
+$queryParameters?: any,
+$domain?: string
+}): Promise<{{#tsReturnType}}{{>type}}{{/tsReturnType}}{{^tsReturnType}}any{{/tsReturnType}}> {
+        return this.{{&methodName}}WithHttpInfo(parameters).then(function(response: request.Response) { return response.body; });
 };
